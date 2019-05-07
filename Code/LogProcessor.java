@@ -3,11 +3,11 @@ import java.util.*;
 import javafx.collections.*;
 
 public class LogProcessor{
-	private static ArrayList<String> toBeIngnored = new ArrayList<String>(Arrays.asList("HEAP_ALLOCATE","STATEMENT_EXECUTE","USER_INFO","EXECUTION_STARTED","VARIABLE_SCOPE_BEGIN","VARIABLE_ASSIGNMENT"));
 	private static ArrayList<String> tags = new ArrayList<String>();
 	private TreeSet<String> tagsAvailable = new TreeSet<String>();
-	private static LinkedList<String> localStack = new LinkedList<String>();
 	
+	//get tags present in file
+	//@return comma seperated tags
 	public String getTags(String fileName) throws Exception{
 		this.tagsAvailable = this.getTagsFromFile(fileName);
 		if(this.tagsAvailable == null || this.tagsAvailable.isEmpty()) return "";
@@ -17,12 +17,14 @@ public class LogProcessor{
 		return toBeReturned.substring(1);
 	}	
 	
+	//set tags for processing logs
 	public void setTags(ObservableList tagList){
 		if(tags == null) tags = new ArrayList<String>();
 		tags.clear();
 		for(Object o: tagList) tags.add(o.toString());
 	}
 	
+	//main method for parsing selected log file
 	public String processLogs(String fileName) throws Exception {
 		String codeToBeReturned = "";
 		RandomAccessFile raf = new RandomAccessFile(fileName,"rw");
@@ -40,6 +42,7 @@ public class LogProcessor{
 		return codeToBeReturned;
 	}
 	
+	//check if the line which is going to be processed has one of the selected tag
 	private static Boolean isValid(String line){
 		Boolean found = false;
 		for(String str : tags){
@@ -51,15 +54,7 @@ public class LogProcessor{
 		return found;
 	}
 	
-	private static String getTabs(int count){
-		String tabs = "";
-		while(count > 0){
-			tabs+="\t";
-			count--;
-		}
-		return tabs;
-	}
-	
+	//fetch tags from file 
 	private TreeSet<String> getTagsFromFile(String fileName) throws Exception{
 		if(tagsAvailable == null) tagsAvailable = new TreeSet<String>();
 		tagsAvailable.clear();
@@ -76,6 +71,7 @@ public class LogProcessor{
 		return tagsAvailable;
 	}
 	
+	//fetch tag from line
 	private String getTagFromLine(String line){
 		String retString = null;
 		line = line.substring(line.indexOf("|") + 1);
@@ -85,34 +81,7 @@ public class LogProcessor{
 		return retString;
 	}
 	
-	private static String processLine(String line){
-		String retString = "";
-		line = line.substring(line.indexOf("|") + 1);
-		int typeIndex = line.indexOf("|");
-		if(typeIndex != -1){
-			String tag = line.substring(0,typeIndex);
-			if(tag.contains("METHOD_ENTRY")){	
-				retString +=getTabs(localStack.size())+tag;
-				localStack.add(tag);
-			}
-			else if(tag.contains("METHOD_EXIT") && localStack.peekLast().contains("METHOD_ENTRY")){
-				localStack.removeLast();
-				retString +=getTabs(localStack.size())+tag;
-			}
-			else{
-				retString +=getTabs(localStack.size())+tag;
-			}
-			retString +="     :      ";
-			typeIndex = line.lastIndexOf("|");
-			if(typeIndex != -1)
-				retString+= line.substring(typeIndex+1);
-		}
-		else{
-			return line;
-		}
-		return retString;
-	}
-	
+	//saving the processed log from UI to file
 	public String saveFile(String oldFileName,String logs) throws Exception{
 		String newFileName = "";
 		newFileName = oldFileName.substring(0,oldFileName.lastIndexOf(".")) +"_"+String.valueOf(Calendar.getInstance().getTime()).replaceAll(" ","_").replaceAll(":","_")+".log";

@@ -11,7 +11,7 @@ import javafx.geometry.*;
 import javafx.event.*;
 import java.io.*;
 import java.util.*;
-import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Alert.*;
 import javafx.collections.transformation.*;
 
 
@@ -78,7 +78,8 @@ public class LogProcessingScreen extends Application {
 			ObservableList listView1Items = listView.getItems();
 			TreeSet<String> toBeAdded = new TreeSet<String>();
             for(Object o : selectedIndices){
-				if(!listView1Items.contains(o.toString())) listView1Items.add(o.toString());
+				listView1Items.add(o.toString());
+				toBeAdded.add(o.toString());
             }
 			listView2.getItems().removeAll(toBeAdded);
 			listView.setItems(sort(listView));
@@ -135,6 +136,9 @@ public class LogProcessingScreen extends Application {
 					processText.setText("Processing...");
 					setAllFunc(true);
 				}catch(Exception e){
+					a.setAlertType(AlertType.ERROR); 
+					a.setContentText(e.getMessage());  
+					a.show();
 					pb.setVisible(false);
 					processText.setText("");
 					setAllFunc(false);
@@ -197,6 +201,7 @@ public class LogProcessingScreen extends Application {
 		
 		textArea = new TextArea();
 		textArea.setEditable(false);
+        textArea.setFont(Font.font("Times New Roman", FontWeight.BOLD, 15));
 		textArea.setPrefHeight(primaryScreenBounds.getHeight() - 200);
 		textArea.setPrefWidth( primaryScreenBounds.getWidth()- 750);
 		ScrollPane scrollPane = new ScrollPane(textArea);
@@ -316,6 +321,9 @@ public class LogProcessingScreen extends Application {
 					setAllFunc(true);
 				
 			}catch(Exception e){
+				a.setAlertType(AlertType.ERROR); 
+				a.setContentText(e.getMessage());  
+				a.show();
 				System.out.println(e);
 				pb.setVisible(false);
 				processText.setText("");
@@ -325,24 +333,5 @@ public class LogProcessingScreen extends Application {
 		else {
 			System.out.println("Log File selection cancelled.");
 		}
-	}
-
-	private class MultipleFcButtonListener implements EventHandler<ActionEvent> {
-
-		@Override
-		public void handle(ActionEvent e) {
-
-			showMultipleFileChooser();
-		}
-	}
-
-	private void showMultipleFileChooser() {
-
-		FileChooser fileChooser = new FileChooser();
-		fileChooser.setTitle("Select Debug log files");
-		fileChooser.getExtensionFilters().addAll(
-			new ExtensionFilter("Debug log Files", "*.log"));
-		List<File> selectedFiles = fileChooser.showOpenMultipleDialog(savedStage);
-
 	}
 }

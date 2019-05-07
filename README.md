@@ -2,6 +2,7 @@
 
 A tool to filter SF debug log and enhance debugging.
 
+![screenshot](https://github.com/vimaltiwari2612/SalesForceDebugLogsParser/edit/master/Capture.PNG)
 
 #how to use
 1. download the zip from git

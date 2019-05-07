@@ -115,16 +115,16 @@ public class LogProcessor{
 	
 	public String saveFile(String oldFileName,String logs) throws Exception{
 		String newFileName = "";
-		newFileName = oldFileName.substring(oldFileName.lastIndexOf("\\")+1) +"_"+String.valueOf(Calendar.getInstance().getTime()).replaceAll(" ","_");
+		newFileName = oldFileName.substring(0,oldFileName.lastIndexOf(".")) +"_"+String.valueOf(Calendar.getInstance().getTime()).replaceAll(" ","_").replaceAll(":","_")+".log";
 		File file = new File(newFileName);
 		if(file.exists())
 			throw new Exception("File already saved!");
-		
+		file.createNewFile();
 		RandomAccessFile raf = new RandomAccessFile(file,"rw");
 		raf.seek(0);
 		for(String log : logs.split("\n")){
 			raf.writeBytes(log);
-			raf.writeBytes(System.getProperty("line:seperator"));	
+			raf.writeBytes(System.getProperty("line.separator"));	
 		}
 		raf.close();
 		return newFileName;

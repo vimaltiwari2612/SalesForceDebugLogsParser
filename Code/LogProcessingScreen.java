@@ -191,48 +191,48 @@ public class LogProcessingScreen extends Application {
 		   });
 		
 		HBox filterPanel = new HBox(20);    
-		filterPanel.setPadding(new Insets(25, 10, 25, 25));
+		filterPanel.setPadding(new Insets(10, 10, 10, 10));
 		filterPanel.getChildren().addAll(saveFile);		
 		
 		
 		textArea = new TextArea();
 		textArea.setEditable(false);
 		textArea.setPrefHeight(primaryScreenBounds.getHeight() - 200);
-		textArea.setPrefWidth( primaryScreenBounds.getWidth() - 400);
+		textArea.setPrefWidth( primaryScreenBounds.getWidth()- 750);
 		ScrollPane scrollPane = new ScrollPane(textArea);
 		
 		VBox buttonBox = new VBox(20);
-		buttonBox.setPadding(new Insets(150, 0, 0, 0));
+		buttonBox.setPadding(new Insets(150, 0,0,0));
 		buttonBox.getChildren().addAll(button,button1);
 		
 		availabletags = new Label("Available Tags");
 		selectedTags = new Label("Selected Tags");
 		
 		VBox ls1 = new VBox(20);
-		ls1.setPadding(new Insets(25, 25, 25, 25));
+		ls1.setPadding(new Insets(10, 10, 10, 10));
 		ls1.getChildren().addAll(availabletags,listView);
 		
 		VBox ls2 = new VBox(20);
-		ls2.setPadding(new Insets(25, 25, 25, 25));
+		ls2.setPadding(new Insets(10, 10, 10, 10));
 		ls2.getChildren().addAll(selectedTags,listView2);
 		
 		HBox hbox = new HBox(20);    
-		hbox.setPadding(new Insets(25, 10, 25, 25));
+		hbox.setPadding(new Insets(10, 10, 10, 10));
 		hbox.getChildren().addAll(ls1,buttonBox,ls2);
 		
 		
 		// Vbox
 		VBox vbox = new VBox();
-		vbox.setPadding(new Insets(25, 25, 25, 25));
+		vbox.setPadding(new Insets(10, 10, 10, 10));
 		vbox.getChildren().addAll(buttonHb1,hbox, buttonHb2,r);
 		
 		// Vbox
 		VBox showbox = new VBox();
-		showbox.setPadding(new Insets(25, 25, 25, 25));
+		showbox.setPadding(new Insets(10, 10, 10, 10));
 		showbox.getChildren().addAll(scrollPane,filterPanel);
 		
 		HBox finalHbox = new HBox();
-		finalHbox.setPadding(new Insets(25, 25, 25, 25));
+		finalHbox.setPadding(new Insets(10, 10, 10, 10));
 		finalHbox.getChildren().addAll(vbox,showbox);
 
 		// Scene

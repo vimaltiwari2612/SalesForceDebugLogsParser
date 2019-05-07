@@ -15,7 +15,7 @@ public class LogProcessor{
 		for(String str : tagsAvailable)
 			toBeReturned +=","+str;
 		return toBeReturned.substring(1);
-	}
+	}	
 	
 	public void setTags(ObservableList tagList){
 		if(tags == null) tags = new ArrayList<String>();
@@ -24,29 +24,20 @@ public class LogProcessor{
 	}
 	
 	public String processLogs(String fileName) throws Exception {
+		String codeToBeReturned = "";
 		RandomAccessFile raf = new RandomAccessFile(fileName,"rw");
-		String newFileName = fileName+"_"+String.valueOf(Math.random());
-		File file = new File(newFileName);
-		while(file.exists()){
-			newFileName = fileName+"_"+String.valueOf(Math.random());
-		}
-		RandomAccessFile raf1 = new RandomAccessFile(newFileName,"rw");
 		raf.seek(0);
-		raf1.seek(0);
 		raf.readLine();
 		while(raf.getFilePointer() < raf.length()){
 			String line = raf.readLine();
 			if(line.contains("EXECUTION_FINISHED")) break;
 			if(isValid(line)){
-				//raf1.writeBytes(processLine(line));
-				raf1.writeBytes(line);
-				raf1.writeBytes(System.lineSeparator());
+				line = line.substring(line.indexOf("|") + 1);
+					codeToBeReturned+=line+"\n";
 			}	
 		}
-		raf.close();
-		raf1.close();
-		System.out.println("done!\nCheck "+newFileName);
-		return file.getAbsolutePath();
+		raf.close();	
+		return codeToBeReturned;
 	}
 	
 	private static Boolean isValid(String line){
@@ -120,5 +111,22 @@ public class LogProcessor{
 			return line;
 		}
 		return retString;
+	}
+	
+	public String saveFile(String oldFileName,String logs) throws Exception{
+		String newFileName = "";
+		newFileName = oldFileName.substring(oldFileName.lastIndexOf("\\")+1) +"_"+String.valueOf(Calendar.getInstance().getTime()).replaceAll(" ","_");
+		File file = new File(newFileName);
+		if(file.exists())
+			throw new Exception("File already saved!");
+		
+		RandomAccessFile raf = new RandomAccessFile(file,"rw");
+		raf.seek(0);
+		for(String log : logs.split("\n")){
+			raf.writeBytes(log);
+			raf.writeBytes(System.getProperty("line:seperator"));	
+		}
+		raf.close();
+		return newFileName;
 	}
 }
